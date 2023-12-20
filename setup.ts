@@ -49,9 +49,7 @@ async function main() {
   const rli = readLine.createInterface({ input: process.stdin, output: process.stdout });
   const answer = await rli.question("Run setup script? [Y/n] ");
 
-  if (answer === "" || answer.toLowerCase() === "y") {
-    await setup();
-  }
+  if (answer === "" || answer.toLowerCase() === "y") await setup();
 
   rli.close();
 }

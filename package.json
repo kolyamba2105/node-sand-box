@@ -1,7 +1,6 @@
 {
   "name": "node-sand-box",
   "version": "1.0.0",
-  "description": "Node SandBox",
   "license": "MIT",
   "private": true,
   "scripts": {

@@ -8,6 +8,7 @@
     "build": "NODE_ENV=production webpack",
     "lint": "eslint --fix './**/*.ts'",
     "start": "node build",
+    "postinstall": "ts-node setup.ts",
     "watch": "webpack --watch"
   },
   "devDependencies": {

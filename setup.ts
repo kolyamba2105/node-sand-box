@@ -1,8 +1,9 @@
-import childProcess from "child_process";
-import fs from "fs/promises";
-import path from "path";
-import readLine from "readline/promises";
-import util from "util";
+import * as childProcess from "node:child_process";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import * as process from "node:process";
+import * as readLine from "node:readline/promises";
+import * as util from "node:util";
 
 async function updatePackageJson() {
   console.log("Updating package.json...");
@@ -46,14 +47,13 @@ async function setup() {
 
 async function main() {
   const rli = readLine.createInterface({ input: process.stdin, output: process.stdout });
-
   const answer = await rli.question("Run setup script? [Y/n]");
 
-  if (answer.toLowerCase() === "y") {
-    return setup();
+  if (answer === "" || answer.toLowerCase() === "y") {
+    await setup();
   }
 
-  console.log("Done!");
+  rli.close();
 }
 
 main();

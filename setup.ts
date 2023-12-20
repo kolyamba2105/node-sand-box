@@ -1,30 +1,26 @@
 import childProcess from "child_process";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
+import readLine from "readline/promises";
 import util from "util";
-
-const executeCommand = util.promisify(childProcess.exec);
-const readFile = util.promisify(fs.readFile);
-const remove = util.promisify(fs.rm);
-const writeFile = util.promisify(fs.writeFile);
 
 async function updatePackageJson() {
   console.log("Updating package.json...");
 
-  const buffer = await readFile(path.join(__dirname, "package.json"));
+  const buffer = await fs.readFile(path.join(__dirname, "package.json"));
   const packageJson = JSON.parse(buffer.toString());
 
   packageJson.name = path.basename(__dirname);
   packageJson.scripts.postinstall = undefined;
 
-  await writeFile(path.join(__dirname, "package.json"), JSON.stringify(packageJson, null, 2));
+  await fs.writeFile(path.join(__dirname, "package.json"), JSON.stringify(packageJson, null, 2));
 }
 
 async function removeRedundantFiles() {
   console.log("Removing redundant files...");
 
-  await remove(path.join(__dirname, ".git"), { force: true, recursive: true });
-  await remove(path.join(__dirname, "setup.ts"));
+  await fs.rm(path.join(__dirname, ".git"), { force: true, recursive: true });
+  await fs.rm(path.join(__dirname, "setup.ts"));
 }
 
 async function initRepo() {
@@ -32,10 +28,12 @@ async function initRepo() {
 
   const commands = ["git init", "git add .", 'git commit -m "Initial commit"'];
 
-  for (const command of commands) await executeCommand(command);
+  for (const command of commands) await util.promisify(childProcess.exec)(command);
 }
 
 async function setup() {
+  console.log("Running setup script...");
+
   try {
     await updatePackageJson();
     await removeRedundantFiles();
@@ -46,4 +44,16 @@ async function setup() {
   }
 }
 
-setup();
+async function main() {
+  const rli = readLine.createInterface({ input: process.stdin, output: process.stdout });
+
+  const answer = await rli.question("Run setup script? [Y/n]");
+
+  if (answer.toLowerCase() === "y") {
+    return setup();
+  }
+
+  console.log("Done!");
+}
+
+main();

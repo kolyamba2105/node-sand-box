@@ -16,7 +16,7 @@ function isValidMode(value: string): value is Mode {
 }
 
 const env = process.env.NODE_ENV;
-const mode = env && isValidMode(env) ? env : "production";
+const mode = env && isValidMode(env) ? env : "development";
 
 function isNonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined;

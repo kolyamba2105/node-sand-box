@@ -26,7 +26,7 @@ function compact<T>(values: Array<T>): Array<NonNullable<T>> {
   return values.filter(isNonNullable);
 }
 
-const server: webpack.Configuration = {
+const config: webpack.Configuration = {
   devtool: mode === "development" ? "source-map" : false,
   entry: [path.resolve(__dirname, "src/index.ts")],
   externals: [WebpackNodeExternals()],
@@ -67,4 +67,4 @@ const server: webpack.Configuration = {
   target: "node",
 };
 
-export default server;
+export default config;
